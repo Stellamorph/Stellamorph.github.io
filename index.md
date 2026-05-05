@@ -5,7 +5,7 @@ permalink: /
 description: "Exploring Stellarator Stage I Design with Stochastic Flow Search."
 bibliography: stellamorph.bib
 comments: true
-code_url: https://github.com/Stellamorph/Stellamorph.github.io
+code_url: https://github.com/SII-AI4Fusion/Stellamorph
 toc:
   - name: Why Fusion?
   - name: What is Stellarator
