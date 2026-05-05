@@ -1,0 +1,11 @@
+{%- if site.utterances_repo and page.comments -%}
+<section id="comments" class="comments-section" style="max-width: 1000px; margin: 3rem auto 2rem; padding: 0 1rem;">
+  <script src="https://utteranc.es/client.js"
+      repo="{{ site.utterances_repo }}"
+      issue-term="{{ site.utterances_issue_term | default: 'pathname' }}"
+      theme="{{ site.utterances_theme | default: 'github-light' }}"
+      crossorigin="anonymous"
+      async>
+  </script>
+</section>
+{%- endif -%}

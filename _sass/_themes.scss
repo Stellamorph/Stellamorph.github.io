@@ -1,0 +1,25 @@
+/*******************************************************************************
+ * Themes
+ ******************************************************************************/
+ 
+:root {
+  --global-bg-color: #f6eedf;
+  --global-code-bg-color: #efe2cc;
+  --global-text-color: #33271d;
+  --global-text-color-light: #765f49;
+  --global-theme-color: #8a5a32;
+  --global-hover-color: #5f3c20;
+  --global-footer-bg-color: #eadbc3;
+  --global-footer-text-color: #4a3828;
+  --global-footer-link-color: #5f3c20;
+  --global-distill-app-color: #765f49;
+  --global-divider-color: rgba(80, 55, 33, .16);
+  --global-card-bg-color: #fbf5ea;
+  .repo-img-light {
+    display: block;
+  }
+  .repo-img-dark {
+    display: none;
+  }
+}
+

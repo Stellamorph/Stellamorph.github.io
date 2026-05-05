@@ -1,0 +1,257 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 520" role="img" aria-labelledby="title desc">
+  <title id="title">One-dimensional noise to data path</title>
+  <desc id="desc">An interactive one-dimensional diffusion path. The left marginal density is Gaussian noise, the right marginal density is structured data, and stochastic paths connect them through time.</desc>
+  <style>
+    :root {
+      --bg: #f6eedf;
+      --panel: #fbf5ea;
+      --ink: #33271d;
+      --muted: #765f49;
+      --accent: #8a5a32;
+      --accent-dark: #5f3c20;
+      --line: rgba(80, 55, 33, 0.22);
+      --grid: rgba(80, 55, 33, 0.12);
+    }
+    text {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      fill: var(--ink);
+    }
+    .small { font-size: 13px; fill: var(--muted); }
+    .math { font-family: "Cambria Math", "Times New Roman", serif; font-size: 24px; font-style: italic; fill: var(--muted); }
+    .math .upright { font-style: normal; }
+    .axis { stroke: var(--line); stroke-width: 1.2; }
+    .frame { fill: none; stroke: var(--line); stroke-width: 1.3; }
+    .grid { stroke: var(--grid); stroke-width: 1; }
+    .slice { stroke: var(--accent-dark); stroke-width: 2.4; }
+    .marginal { fill: none; stroke: var(--accent-dark); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+    .marginal-fill { fill: rgba(138, 90, 50, 0.13); }
+    .path { fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; opacity: 0.78; }
+    .track { stroke: rgba(80, 55, 33, 0.25); stroke-width: 12; stroke-linecap: round; cursor: pointer; }
+    .track-fill { stroke: var(--accent); stroke-width: 12; stroke-linecap: round; pointer-events: none; }
+    .knob { fill: var(--panel); stroke: var(--accent-dark); stroke-width: 3; cursor: grab; }
+    .knob:active { cursor: grabbing; }
+  </style>
+
+  <rect width="1040" height="520" fill="var(--bg)" />
+
+  <g id="leftDensity">
+    <text x="42" y="76" class="math">
+      <tspan>p</tspan><tspan baseline-shift="sub" font-size="16">1</tspan><tspan>(x)</tspan>
+      <tspan class="upright"> = </tspan><tspan>𝒩</tspan><tspan class="upright">(0, I)</tspan>
+    </text>
+    <rect x="42" y="92" width="84" height="300" fill="rgba(255,255,255,0.2)" stroke="var(--line)" />
+    <line x1="126" y1="92" x2="126" y2="392" class="axis" />
+    <path id="noiseFill" class="marginal-fill" />
+    <path id="noiseCurve" class="marginal" />
+  </g>
+
+  <g id="pathPanel">
+    <g id="heatmap"></g>
+    <rect x="148" y="92" width="720" height="300" class="frame" />
+    <line x1="148" y1="167" x2="868" y2="167" class="grid" />
+    <line x1="148" y1="242" x2="868" y2="242" class="grid" />
+    <line x1="148" y1="317" x2="868" y2="317" class="grid" />
+    <g id="paths"></g>
+    <line id="timeSlice" x1="148" y1="92" x2="148" y2="392" class="slice" />
+  </g>
+
+  <g id="rightDensity">
+    <text x="892" y="76" class="math">
+      <tspan>p</tspan><tspan id="rightLabelTime" baseline-shift="sub" font-size="16">t</tspan><tspan>(x)</tspan>
+    </text>
+    <rect x="890" y="92" width="116" height="300" fill="rgba(255,255,255,0.2)" stroke="var(--line)" />
+    <line x1="890" y1="92" x2="890" y2="392" class="axis" />
+    <path id="dataFill" class="marginal-fill" />
+    <path id="dataCurve" class="marginal" />
+  </g>
+
+  <g id="slider">
+    <line id="track" x1="212" y1="468" x2="828" y2="468" class="track" />
+    <line id="trackFill" x1="212" y1="468" x2="212" y2="468" class="track-fill" />
+    <circle id="knob" cx="212" cy="468" r="15" class="knob" />
+    <text x="182" y="508" class="math"><tspan>t</tspan><tspan class="upright"> = 1</tspan></text>
+    <text x="798" y="508" class="math"><tspan>t</tspan><tspan class="upright"> = 0</tspan></text>
+  </g>
+
+  <script><![CDATA[
+    const panel = { x: 148, y: 92, w: 720, h: 300 };
+    const left = { axis: 126, y: 92, w: 78, h: 300 };
+    const right = { axis: 890, y: 92, w: 108, h: 300 };
+    const track = { x0: 212, x1: 828, y: 468 };
+    const heatmap = document.getElementById("heatmap");
+    const paths = document.getElementById("paths");
+    const dataCurve = document.getElementById("dataCurve");
+    const dataFill = document.getElementById("dataFill");
+    const rightLabelTime = document.getElementById("rightLabelTime");
+    const timeSlice = document.getElementById("timeSlice");
+    const knob = document.getElementById("knob");
+    const trackFill = document.getElementById("trackFill");
+    const trackNode = document.getElementById("track");
+    const pathColors = ["#5f3c20", "#7b4e29", "#8a5a32", "#a47750", "#6e553d"];
+
+    function gaussian(x, mu, s) {
+      const z = (x - mu) / s;
+      return Math.exp(-0.5 * z * z) / s;
+    }
+
+    function noise(x) {
+      return gaussian(x, 0, 1.08);
+    }
+
+    function data(x) {
+      return 0.54 * gaussian(x, -1.45, 0.28) + 0.46 * gaussian(x, 1.36, 0.31);
+    }
+
+    function density(x, t) {
+      const bridge = t * noise(x) + (1 - t) * data(x);
+      const sharpening = 0.08 * Math.sin((1 - t) * Math.PI) * gaussian(x, 0.05, 0.58);
+      return Math.max(0, bridge - sharpening);
+    }
+
+    function sx(p) {
+      return panel.x + p * panel.w;
+    }
+
+    function sy(xValue) {
+      return panel.y + ((2.85 - xValue) / 5.7) * panel.h;
+    }
+
+    function colorFor(value) {
+      const v = Math.max(0, Math.min(1, value));
+      const stops = [
+        [251, 245, 234],
+        [239, 222, 194],
+        [211, 165, 103],
+        [145, 94, 49],
+        [86, 54, 29]
+      ];
+      const scaled = v * (stops.length - 1);
+      const i = Math.min(stops.length - 2, Math.floor(scaled));
+      const f = scaled - i;
+      const a = stops[i];
+      const b = stops[i + 1];
+      const rgb = a.map((c, idx) => Math.round(c + (b[idx] - c) * f));
+      return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+    }
+
+    function drawHeatmap() {
+      const cols = 128;
+      const rows = 64;
+      const cw = panel.w / cols;
+      const rh = panel.h / rows;
+      for (let c = 0; c < cols; c++) {
+        const progress = (c + 0.5) / cols;
+        const t = 1 - progress;
+        for (let r = 0; r < rows; r++) {
+          const xValue = 2.85 - ((r + 0.5) / rows) * 5.7;
+          const value = density(xValue, t) / 1.18;
+          const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          rect.setAttribute("x", panel.x + c * cw);
+          rect.setAttribute("y", panel.y + r * rh);
+          rect.setAttribute("width", cw + 0.8);
+          rect.setAttribute("height", rh + 0.8);
+          rect.setAttribute("fill", colorFor(Math.pow(value, 0.72)));
+          heatmap.appendChild(rect);
+        }
+      }
+    }
+
+    function marginalPath(fn, side) {
+      let d = "";
+      for (let i = 0; i <= 130; i++) {
+        const xValue = 2.85 - (5.7 * i) / 130;
+        const amount = Math.min(side.w, fn(xValue) * 46);
+        const px = side.axis + (side === left ? -amount : amount);
+        const py = sy(xValue);
+        d += (i === 0 ? "M " : " L ") + px.toFixed(2) + " " + py.toFixed(2);
+      }
+      return d;
+    }
+
+    function marginalFillPath(fn, side) {
+      const curve = marginalPath(fn, side).replace(/^M /, "L ");
+      return `M ${side.axis} ${panel.y} ${curve} L ${side.axis} ${panel.y + panel.h} Z`;
+    }
+
+    function seededUniform(seed) {
+      const x = Math.sin(seed * 12.9898) * 43758.5453;
+      return x - Math.floor(x);
+    }
+
+    function seededNormal(seed) {
+      const u1 = Math.max(1e-4, seededUniform(seed));
+      const u2 = seededUniform(seed + 19.19);
+      return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+    }
+
+    function drawPaths() {
+      const targets = [-1.92, -1.62, -1.36, -1.18, 1.02, 1.25, 1.48, 1.72, 1.96, -1.48, 1.35, -1.28, 1.58];
+      targets.forEach((target, i) => {
+        let d = "";
+        const steps = 120;
+        const dt = 1 / steps;
+        let value = seededNormal(120 + i * 17) * 0.48;
+        for (let k = 0; k <= steps; k++) {
+          const p = k / steps;
+          const x = sx(p);
+          const y = sy(value);
+          d += (k === 0 ? "M " : " L ") + x.toFixed(2) + " " + y.toFixed(2);
+          const pull = 1.7 + 5.6 * p;
+          const sigma = 1.35 * (1 - 0.68 * p);
+          const dw = Math.sqrt(dt) * seededNormal(4000 + i * 307 + k * 23);
+          value += pull * (target - value) * dt + sigma * dw;
+          if (value > 2.65) value = 2.65;
+          if (value < -2.65) value = -2.65;
+        }
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", d);
+        path.setAttribute("class", "path");
+        path.setAttribute("stroke", pathColors[i % pathColors.length]);
+        paths.appendChild(path);
+      });
+    }
+
+    function setProgress(progress) {
+      const p = Math.max(0, Math.min(1, progress));
+      const t = 1 - p;
+      const x = track.x0 + p * (track.x1 - track.x0);
+      const sliceX = sx(p);
+      knob.setAttribute("cx", x);
+      trackFill.setAttribute("x2", x);
+      timeSlice.setAttribute("x1", sliceX);
+      timeSlice.setAttribute("x2", sliceX);
+      dataCurve.setAttribute("d", marginalPath(xValue => density(xValue, t), right));
+      dataFill.setAttribute("d", marginalFillPath(xValue => density(xValue, t), right));
+      rightLabelTime.textContent = t > 0.99 ? "1" : t < 0.01 ? "0" : "t";
+    }
+
+    function progressFromEvent(event) {
+      const pt = document.documentElement.createSVGPoint();
+      pt.x = event.clientX;
+      pt.y = event.clientY;
+      const svgPoint = pt.matrixTransform(document.documentElement.getScreenCTM().inverse());
+      return (svgPoint.x - track.x0) / (track.x1 - track.x0);
+    }
+
+    let dragging = false;
+    [trackNode, knob].forEach(el => {
+      el.addEventListener("pointerdown", event => {
+        dragging = true;
+        knob.setPointerCapture(event.pointerId);
+        setProgress(progressFromEvent(event));
+      });
+    });
+    knob.addEventListener("pointermove", event => {
+      if (dragging) setProgress(progressFromEvent(event));
+    });
+    knob.addEventListener("pointerup", () => { dragging = false; });
+    knob.addEventListener("pointercancel", () => { dragging = false; });
+    trackNode.addEventListener("click", event => setProgress(progressFromEvent(event)));
+
+    document.getElementById("noiseCurve").setAttribute("d", marginalPath(noise, left));
+    document.getElementById("noiseFill").setAttribute("d", marginalFillPath(noise, left));
+    drawHeatmap();
+    drawPaths();
+    setProgress(0);
+  ]]></script>
+</svg>
