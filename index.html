@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<!-- _layouts/distill.html -->
+<html>
+
+  <head>    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap & MDB -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-DF7Zhf293AJxJNTmh5zhoYYIMs2oXitRfBjY+9L//AY=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/css/mdb.min.css" integrity="sha256-jpjYvU3G3N6nrrBwXJoVEYI/0zw8htfFnhT9ljN3JJw=" crossorigin="anonymous" />
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.1/css/academicons.min.css" integrity="sha256-i1+4qU2G2860dGGIOJscdC30s9beBXjFfzjWLjBRsBg=" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons">
+
+    <!-- Code Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jwarby/jekyll-pygments-themes@master/github.css" media="" id="highlight_theme_light" />
+
+    <!-- Styles -->
+    
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="canonical" href="https://stellamorph.github.io/">
+
+
+
+    <!-- jQuery -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- MathJax -->
+  <script type="text/javascript">
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+        tags: 'ams'
+      },
+      options: {
+        enableMenu: false
+      }
+    };
+  </script>
+  <script defer type="text/javascript" id="MathJax-script" src="/assets/js/mathjax/es5/tex-mml-chtml.js"></script>
+
+    <!-- Distill js -->
+    <script src="/assets/js/distillpub/template.v2.js"></script>
+    <script src="/assets/js/distillpub/transforms.v2.js"></script>
+    <script src="/assets/js/distillpub/overrides.js"></script>
+    
+  </head>
+
+  <d-front-matter>
+    <script async type="text/json">{
+      "title": "Stellamorph",
+      "description": "Exploring Stellarator Stage I Design with Stochastic Flow Search.",
+      "published": "",
+      "authors": [
+        
+      ],
+      "katex": {
+        "delimiters": [
+          {
+            "left": "$",
+            "right": "$",
+            "display": false
+          },
+          {
+            "left": "$$",
+            "right": "$$",
+            "display": true
+          }
+        ]
+      }
+    }</script>
+  </d-front-matter>
+
+  <body class="fixed-top-nav">
+
+    <!-- Header -->
+    <header>
+
+      <!-- Nav Bar -->
+      <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top">
+        <div class="container">
+          
+          <!-- Navbar Toggle -->
+          <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar top-bar"></span>
+            <span class="icon-bar middle-bar"></span>
+            <span class="icon-bar bottom-bar"></span>
+          </button>
+
+          <div class="collapse navbar-collapse text-right" id="navbarNav">
+            <ul class="navbar-nav ml-auto flex-nowrap">
+
+              <!-- Other pages -->
+</ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+
+    <!-- Content -->
+    <div class="post distill">
+
+      <d-title>
+        <h1>Stellamorph</h1>
+        
+        <p>Exploring Stellarator Stage I Design with Stochastic Flow Search.</p>
+        
+        <p class="title-links">
+          <a href="https://github.com/SII-AI4Fusion/Stellamorph" class="title-link" target="_blank" rel="noopener noreferrer noopener noreferrer">
+            <i class="fab fa-github"></i> Codebase
+          </a>
+        </p>
+        
+      </d-title>
+
+      <div class="custom-byline">
+        <div class="byline-authors">
+          <p class="byline-label">AUTHORS</p>
+          
+        </div>
+      </div>
+
+      <d-byline style="display:none;"></d-byline>
+
+      <d-article>
+        <d-contents>
+          <nav class="l-text figcaption">
+          <h3>Contents</h3>
+            <div><a href="#why-fusion">Why Fusion?</a></div>
+            <div><a href="#what-is-stellarator">What is Stellarator</a></div>
+            <div><a href="#what-is-diffusion-and-flow-matching-models">What is Diffusion and Flow Matching Models</a></div>
+            <div><a href="#flow-sde-search-for-fusion-a-step-forward">Flow-SDE Search for Fusion, a Step Forward</a></div>
+            <div><a href="#limitations-and-potential-future-directions">Limitations and potential future directions</a></div>
+            
+          </nav>
+        </d-contents>
+
+        <h2 id="why-fusion">Why Fusion?</h2>
+
+<p>Energy is the hidden substrate of modern civilization. Industry, transportation, computation, medicine, and daily life all depend on reliable power. The challenge is therefore not only to produce more electricity, but to produce energy that is clean, safe, affordable, and available when society needs it.</p>
+
+<p>This remains a difficult open problem. Much of today’s useful energy is still tied, directly or indirectly, to carbon-emitting fuels. Avoiding further climate change therefore requires large-scale carbon-free energy, and existing options each carry trade-offs. Wind and solar are essential but intermittent. Nuclear fission provides dense low-carbon power, but it raises concerns around long-lived waste, safety, cost, and fuel management. Growing computation and AI demand add another pressure point: data centers are projected to consume substantially more electricity by 2030 <d-cite key="iea2025EnergyAIExecutive,iea2025AIDemand"></d-cite>.</p>
+
+<p>Fusion offers a different long-term possibility. Instead of splitting heavy nuclei, it releases energy by combining light nuclei into heavier ones, the same broad process that powers stars. The most widely studied near-term fuel cycle is deuterium-tritium fusion:</p>
+
+\[{}^{2}_{1}\mathrm{H} + {}^{3}_{1}\mathrm{H} \rightarrow {}^{4}_{2}\mathrm{He} + {}^{1}_{0}\mathrm{n} + 17.6~\mathrm{MeV}.
+\tag{1}\]
+
+<p>The fuel story shifts toward hydrogen isotopes and lithium-based tritium breeding, while avoiding the same category of long-lived high-level waste associated with fission <d-cite key="doe2024fusionstrategy,iaeaFusionFaq,iaeaFusionSafety"></d-cite>.</p>
+
+<p>But fusion is not magic, and it is not yet commercial electricity. Useful fusion requires an extremely hot plasma, where electrons and nuclei are separated and charged particles move collectively. The plasma must be hot enough for nuclei to overcome their repulsion, dense enough for reactions to happen often, and confined long enough for the released energy to matter. This is often summarized by the triple product:</p>
+
+\[nT\tau_E \gtrsim 3\times 10^{21}~\mathrm{keV\,s\,m^{-3}}.
+\tag{2}\]
+
+<p>Here $n$ is the plasma density, $T$ is the temperature, and $\tau_E$ is the energy confinement time. The value shown is a commonly used D-T Lawson triple-product benchmark near the favorable temperature range for D-T fusion <d-cite key="wurzel2022lawson"></d-cite>. For a reactor to produce useful net power, all three must be large enough at the same time. That is why fusion is, at its core, a confinement problem.</p>
+
+<figure class="l-body" style="margin: 1rem 0 1.5rem; text-align: center;">
+  <img src="/assets/img/teaser_intro.png?v=1" alt="Energy demand and fusion confinement overview" style="display: block; width: 100%; height: auto;">
+  <figcaption style="text-align: center;">Energy demand and fusion confinement. (Generated By GPT-Image-2.)</figcaption>
+</figure>
+
+<p>Confinement is simple to describe, but difficult to achieve in a controlled terrestrial system. In stars such as the Sun, fusion is sustained by gravitational confinement: the plasma is held at high pressure and temperature by the star’s own mass. On Earth, gravity is far too weak to provide an analogous confinement mechanism, so fusion research relies on engineered approaches.
+Two major approaches are inertial confinement and magnetic confinement. In inertial confinement, a small fuel target is rapidly compressed and heated, with the aim of producing fusion reactions before the target expands. In magnetic confinement, the charged particles in a plasma are guided by magnetic fields, which can reduce contact with material walls and allow confinement over longer timescales.
+Magnetic confinement is particularly relevant for concepts aimed at sustained power production. In this setting, fusion becomes a problem of magnetic-field design: the field must confine a hot plasma while maintaining sufficient stability, confinement time, and compatibility with reactor engineering constraints. Tokamaks and stellarators are two central approaches within this magnetic-confinement family.</p>
+
+<h2 id="what-is-stellarator">What is Stellarator</h2>
+
+<p>Magnetic confinement starts from a simple fact: charged particles tend to spiral along magnetic field lines. If the magnetic field is shaped carefully, it can guide plasma around a toroidal device while reducing direct contact with the surrounding wall. This is not enough by itself, but it gives a physical handle for confinement.</p>
+
+<p>Two major magnetic-confinement machines are tokamaks and stellarators. A tokamak is the current mature design: it is largely axisymmetric, shaped like a torus, and relies partly on a strong plasma current to help create the confining magnetic field. This has made tokamaks extremely important experimentally, but the plasma current also introduces challenges for steady-state operation and stability.</p>
+
+<p>A stellarator takes a different route. Instead of relying strongly on plasma current, it uses carefully shaped three-dimensional external coils to produce twisted magnetic fields. This makes the device harder to design and build, but it is also why stellarators are attractive for steady-state operation.</p>
+
+<figure class="l-body" style="margin: 1rem 0 1.5rem; text-align: center;">
+  <img src="/assets/img/teaser_stellarator.png?v=1" alt="Tokamak and stellarator comparison with stage I plasma boundary design and stage II coil design" style="display: block; width: 100%; height: auto;">
+  <figcaption style="text-align: center;">Tokamak and Stellarator. (Generated By GPT-Image-2.)</figcaption>
+</figure>
+
+<p>The difficulty is mainly geometric. Coil shapes, magnetic surfaces, plasma stability, confinement quality, heat exhaust, and engineering constraints are all coupled. A small change in shape can change the magnetic field and therefore the quality of confinement. For this reason, stellarator designs are often organized around target magnetic properties, such as quasi-axisymmetry (QA), quasi-helical symmetry (QH), or quasi-isodynamicity (QI). These are not just names for different shapes; they describe different ways of making particles remain better confined.</p>
+
+<p>This also makes stellarator optimization a data problem. A design can be represented by structured variables: boundary coefficients, magnetic-surface descriptors, coil parameters, target labels such as QA or QH, and physics scores measuring confinement or engineering feasibility. Once written in this form, the question becomes natural for machine learning: can a model learn what good stellarator candidates look like, and generate new ones that stay close to the required physical constraints?</p>
+
+<h2 id="what-is-diffusion-and-flow-matching-models">What is Diffusion and Flow Matching Models</h2>
+
+<p>This is where diffusion and flow matching models enter. If a stellarator design is encoded as structured data, then generation can be framed as learning a distribution over feasible designs rather than manually searching one geometry at a time. A model can be conditioned on design intent, such as QA or QH type, and asked to produce candidate configurations that are plausible under the learned design distribution.</p>
+
+<p>In diffusion, the forward process is the easy direction. Start with a clean data point $x_0$, choose a noise schedule, and gradually add Gaussian noise until the sample becomes almost pure noise:</p>
+
+\[x_t = \alpha_t x_0 + \sigma_t \epsilon,\qquad \epsilon \sim \mathcal{N}(0, I),\qquad t\in[0,1].
+\tag{3}\]
+
+<p>Here $t=0$ is data and $t=1$ is noise. The schedule $(\alpha_t,\sigma_t)$ controls how quickly data structure is destroyed. In a stellarator dataset, $x_0$ could be a vector of geometry coefficients or other structured descriptors.</p>
+
+<div class="l-body" style="margin: 0;">
+  <object type="image/svg+xml" data="/assets/img/diffusion-flow-1d.svg?v=4" style="display: block; width: 100%; height: 360px;"></object>
+</div>
+
+<p>Generation is the reverse problem: start from noise at $t=1$ and move toward data at $t=0$. Diffusion and flow matching are two views of this path and can be converted under Gaussian probability paths <d-cite key="diffusionflow2024"></d-cite>. Diffusion usually parameterizes the reverse direction as a score, while flow matching parameterizes it as a velocity:</p>
+
+\[s_\theta(x_t,t) \approx \nabla_{x_t}\log p(x_t),
+\qquad
+v_\theta(x_t,t) \approx u_t(x_t).
+\tag{4}\]
+
+<p>Here we choose flow matching OT path for convenience: $\alpha_t=t,\sigma_t=1-t$. For this path, the score and velocity are connected by</p>
+
+\[s_\theta(x_t,t) 
+=-\frac{1-t}{t}v_\theta(x_t,t) -\frac{x_t}{t}.
+\tag{5}\]
+
+<p>For scientific design, this matters because the model learns a distribution over plausible candidates rather than one deterministic answer. In a stellarator setting, that means learning from known configurations and proposing new magnetic or geometric designs that can later be filtered by physics constraints.</p>
+
+<h2 id="flow-sde-search-for-fusion-a-step-forward">Flow-SDE Search for Fusion, a Step Forward</h2>
+
+<p>The immediate task setting is close to the one proposed in <em>Diffusion for Fusion: Designing Stellarators with Generative AI</em> <d-cite key="padidar2025diffusionfusion"></d-cite>. The object being generated is not an image, but a compact numerical representation of a stellarator boundary. In the current setting, one design is a vector</p>
+
+\[\mathbf{x}_0 \in \mathbb{R}^{d},
+\tag{6}\]
+
+<p>where the entries are plasma-boundary coefficients, typically Fourier coefficients for the boundary surface. Equivalently, before flattening, the same design can be viewed as a structured coefficient table, for example</p>
+
+\[\mathbf{X}_0
+= \{R_{m,n}, Z_{m,n}\}_{(m,n)\in \mathcal{M}}
+\in \mathbb{R}^{|\mathcal{M}|\times 2},
+\tag{7}\]
+
+<p>where $\mathcal{M}$ is the retained set of poloidal and toroidal modes. The condition vector</p>
+
+\[\mathbf{c}
+=
+\left(
+n_{\mathrm{fp}},
+A_{\mathrm{target}},
+\bar{\iota}_{\mathrm{target}}
+\right)
+\tag{8}\]
+
+<p>specifies the three current conditions: number of field periods, target aspect ratio, and target mean rotational transform. The learning problem is therefore conditional generation:</p>
+
+\[\mathbf{x}_0 \sim p_\theta(\mathbf{x}_0\mid \mathbf{c}),
+\tag{9}\]
+
+<p>with evaluation based on physics metrics such as quasisymmetry quality, aspect ratio, and rotational-transform matching.</p>
+
+<p>Our first modification is to move from a diffusion-only model to a flow-based probability path. Using the same noise-to-data convention introduced above, flow matching learns a velocity field $v_\theta(\mathbf{x}_t,t,\mathbf{c})$ that transports samples from a simple prior toward the data distribution <d-cite key="lipman2022flowmatching"></d-cite>. In this setting, an optimal-transport-style path gives a simpler target direction and reduce the rotational degree of the trajectory in higher dimensions.</p>
+
+<p>The second modification is to keep stochastic inference. A pure flow ODE gives one deterministic trajectory once the initial noise is fixed. A Flow-SDE sampler instead adds controlled stochasticity during inference, consistent with the flow/diffusion view of stochastic interpolants <d-cite key="albergo2023stochasticinterpolants"></d-cite>. One discrete reverse-time update can be written as</p>
+
+\[\mathbf{x}_{t-1}
+= \mathbf{x}_{t}
++ \left[
+2v_\theta(\mathbf{x}_t,t,\mathbf{c})
++ \frac{1}{1-t}\mathbf{x}_t
+\right]\Delta t
++ \sqrt{\frac{2t}{1-t}}\boldsymbol{\epsilon},
+\qquad
+\boldsymbol{\epsilon}\sim\mathcal{N}(0,\mathbf{I}).
+\tag{10}\]
+
+<p>This stochastic update is important for design. It makes the sampler a learned transition operator over plausible stellarator shapes, not just a deterministic map from noise to one final answer. That transition operator becomes the legal search space for test-time scaling.</p>
+
+<p>The resulting method is <strong>Iterative Re-noise Branch-and-Select Test-Time Scaling for Flow-SDE Stellarator Design</strong>. The model parameters are frozen. Extra test-time compute is spent on adaptive search: branch sampling, physics evaluation, candidate selection, re-noising, and re-sampling.</p>
+
+<p>Each generated candidate is scored by a scalar physics reward. A typical form is</p>
+
+\[R(\mathbf{x}_0)
+= w_{\mathrm{qs}}R_{\mathrm{qs}}(\mathbf{x}_0)
++ w_{\iota}R_{\iota}(\mathbf{x}_0)
++ w_A R_A(\mathbf{x}_0)
+- P_{\mathrm{invalid}}(\mathbf{x}_0),
+\tag{11}\]
+
+<p>where $R_{\mathrm{qs}}$ is derived from quasisymmetry quality, often by converting lower $J_{\mathrm{qs}}$ into a higher reward, $R_{\iota}$ measures agreement with the target rotational transform, and $R_A$ rewards the desired aspect ratio. Invalid equilibria, failed evaluator calls, NaN metrics, or unreasonable geometry receive a large penalty.</p>
+
+<p>The key operation is re-noising. Instead of perturbing a good design directly in raw coefficient space,</p>
+
+\[\mathbf{x}_0' = \mathbf{x}_0 + \boldsymbol{\eta},
+\tag{12}\]
+
+<p>which can easily leave the learned manifold, we map a selected candidate $\mathbf{x}_0^\star$ back to an intermediate time:</p>
+
+\[\mathbf{x}_t^\star
+= \alpha_t \mathbf{x}_0^\star
++ \sigma_t \boldsymbol{\epsilon},
+\qquad
+\boldsymbol{\epsilon}\sim\mathcal{N}(0,\mathbf{I}).
+\tag{13}\]
+
+<p>Then the stochastic Flow-SDE sampler generates new descendants from $\mathbf{x}_t^\star$. The re-noising time controls the search radius: small $t$ gives local refinement, medium $t$ balances refinement and diversity, and large $t$ behaves like a partial restart.</p>
+
+<p>Mathematically, let $\mathcal{P}_{\ell}$ be the parent states at search round $\ell$. Branch sampling produces</p>
+
+\[\mathcal{C}_{\ell}
+=
+\left\{
+\mathbf{x}_{0}^{(i,b)}
+\;:\;
+\mathbf{x}_{0}^{(i,b)}
+\sim
+\mathrm{FlowSDE}_{\theta}(\cdot\mid \mathbf{p}^{(i)}_{\ell},\mathbf{c}),
+\;
+\mathbf{p}^{(i)}_{\ell}\in\mathcal{P}_{\ell},
+\;
+b=1,\ldots,B
+\right\}.
+\tag{14}\]
+
+<p>The candidates are ranked by physics reward, and the top-$K$ selected set is</p>
+
+\[\mathcal{E}_{\ell}
+=
+\operatorname{TopK}_{\mathbf{x}\in\mathcal{C}_{\ell}} R(\mathbf{x}).
+\tag{15}\]
+
+<p>Each selected candidate is re-noised independently to form the next parent set:</p>
+
+\[\mathcal{P}_{\ell+1}
+=
+\left\{
+\alpha_{t_\ell}\mathbf{x}
++ \sigma_{t_\ell}\boldsymbol{\epsilon}
+\;:\;
+\mathbf{x}\in\mathcal{E}_{\ell},
+\;
+\boldsymbol{\epsilon}\sim\mathcal{N}(0,\mathbf{I})
+\right\}.
+\tag{16}\]
+
+<p>The global output after $L$ rounds is</p>
+
+\[\mathbf{x}_{\mathrm{best}}
+=
+\arg\max_{\mathbf{x}\in \bigcup_{\ell=0}^{L-1}\mathcal{C}_{\ell}}
+R(\mathbf{x}).
+\tag{17}\]
+
+<p>In the implementation, we retain the top-$K$ selected candidates, re-noise them independently, and allow each selected candidate to generate $B$ descendants in the next round. After initialization, this requires $K\times B$ physics evaluations per round.</p>
+
+<p>To ablate the effectiveness of search, we use best-of-$N$ as a simple selection baseline. It draws independent candidates once, evaluates them with the same total VMEC budget used by the search algorithm, and returns the best candidate. We then compare the methods at equal evaluation budget, reporting best reward, mean reward, top-K reward, $J_{\mathrm{qs}}$, rotational-transform error, aspect-ratio error, validity rate, evaluator success rate, diversity, and wall-clock cost.</p>
+
+<p>The idea is that re-noising plus stochastic Flow-SDE sampling acts as a model-aware mutation operator:</p>
+
+\[\mathbf{x}_0^\star
+\rightarrow
+\mathbf{x}_t^\star
+\rightarrow
+\{\mathbf{x}_0^{(1)},\ldots,\mathbf{x}_0^{(B)}\}.
+\tag{18}\]
+
+<p>Instead of searching directly in raw boundary-coefficient space, test-time compute is concentrated along the learned stellarator design manifold, then filtered by physics rewards.</p>
+
+<h3 id="experimental-results">Experimental results</h3>
+
+<p>We compare the Flow-SDE search method with the Diffusion for Fusion DDPM baseline using the same physics-facing evaluation style.</p>
+
+<figure class="l-body" style="margin: 1rem 0 1.5rem; text-align: center;">
+  <img src="/assets/img/exp_main.png" alt="Overall comparison between Flow-SDE search and DDPM baseline" style="display: block; width: 100%; height: auto;">
+  <figcaption style="text-align: center;">Overall comparison.</figcaption>
+</figure>
+
+<figure class="l-body" style="margin: 1rem 0 1.5rem; text-align: center;">
+  <img src="/assets/img/exp_time.png" alt="Time ablation for Flow-SDE search" style="display: block; width: 100%; height: auto;">
+  <figcaption style="text-align: center;">Time ablation.</figcaption>
+</figure>
+
+<p>For the re-noising time ablation, we select $t=0.6$ and $t=0.8$ as balanced settings between local refinement and broader exploration.</p>
+
+<figure class="l-body" style="margin: 1rem 0 1.5rem; text-align: center;">
+  <img src="/assets/img/exp_weight.png" alt="Weight ablation for Flow-SDE search rewards" style="display: block; width: 100%; height: auto;">
+  <figcaption style="text-align: center;">Weight ablation.</figcaption>
+</figure>
+
+<p>For the reward-weight ablation, emphasizing one reward term gives an obvious advantage on that term, while the trade-off appears across the other weighted objectives.</p>
+
+<figure class="l-body" style="margin: 1rem 0 1.5rem; text-align: center;">
+  <img src="/assets/img/exp_oos.png" alt="Out-of-sample comparison for Flow-SDE search" style="display: block; width: 100%; height: auto;">
+  <figcaption style="text-align: center;">OOS.</figcaption>
+</figure>
+
+<p>In the out-of-sample setting, the method improves $C_A$, $C_{\iota}$, and the success rate, while the improvement on $J_{\mathrm{qs}}$ is not yet obvious. We leave stronger out-of-distribution improvement in quasisymmetry quality to future exploration.</p>
+
+<figure class="l-body" style="margin: 1rem 0 1.5rem; text-align: center;">
+  <img src="/assets/img/exp_qualitative.png" alt="Qualitative generated stellarator boundary examples across field periods" style="display: block; width: 100%; height: auto;">
+  <figcaption style="text-align: center;">Qualitative examples.</figcaption>
+</figure>
+
+<p>Here we also present the generated examples spanning 2-8 field periods.</p>
+
+<h2 id="limitations-and-potential-future-directions">Limitations and potential future directions</h2>
+
+<p>One limitation is evaluation cost. In the current experiments, we use 100 samples for comparison because VMEC evaluation is slow. For example, one search run can require $7 \times 100 \times (40+1)$ VMEC evaluations, which takes roughly three days to complete. This makes statistical noise unavoidable. To reduce the effect of a single noisy condition, we calculate the comparison across all $n_{\mathrm{fp}}$ settings when evaluating method effectiveness.</p>
+
+<div style="display: flex; justify-content: center; margin: 1rem 0 1.25rem;">
+  <table style="width: auto; min-width: 70%; text-align: center;">
+    <thead>
+      <tr>
+        <th style="text-align: center;">Sample size</th>
+        <th style="text-align: center;">Success rate</th>
+        <th style="text-align: center;">$J_{\mathrm{QS}}$</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align: center;">10</td>
+        <td style="text-align: center;">$76.7\% \pm 15.3\%$</td>
+        <td style="text-align: center;">$0.046820 \pm 0.011268$</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">100</td>
+        <td style="text-align: center;">$64.3\% \pm 2.5\%$</td>
+        <td style="text-align: center;">$0.045189 \pm 0.001749$</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">1000</td>
+        <td style="text-align: center;">$60.6\% \pm 1.4\%$</td>
+        <td style="text-align: center;">$0.047211 \pm 0.000457$</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">5000</td>
+        <td style="text-align: center;">$61.3\% \pm 0.7\%$</td>
+        <td style="text-align: center;">$0.046627 \pm 0.000194$</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p>Several extensions remain natural next steps. One direction is to examine whether the same formulation transfers beyond the current QA/QH setting based on QUASR-style data, especially toward QI configurations such as those represented in ConStellaration-style datasets <d-cite key="cadena2025constellaration"></d-cite>. Another direction is to incorporate additional physics constraints and a stage-2 coil-design objective. This would allow generated plasma boundaries to be evaluated in closer connection with coil feasibility, rather than only as isolated boundary candidates.</p>
+
+      </d-article><section id="comments" class="comments-section" style="max-width: 1000px; margin: 3rem auto 2rem; padding: 0 1rem;">
+  <script src="https://utteranc.es/client.js" repo="Stellamorph/Stellamorph.github.io" issue-term="pathname" theme="github-light" crossorigin="anonymous" async>
+  </script>
+</section>
+
+      <d-appendix>
+        <d-footnote-list></d-footnote-list>
+        <d-citation-list></d-citation-list>
+      </d-appendix>
+
+    </div>
+
+    <d-bibliography src="/assets/bibliography/stellamorph.bib"></d-bibliography>
+
+    <!-- Bootsrap & MDB scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha256-fgLAgv7fyCGopR/gBNq2iW3ZKIdqIcyshnUULC4vex8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script>
+
+    
+  <!-- Medium Zoom JS -->
+  <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js" integrity="sha256-EdPgYcPk/IIrw7FYeuJQexva49pVRZNmt3LculEr7zM=" crossorigin="anonymous"></script>
+  <script defer src="/assets/js/zoom.js"></script><!-- Load Common JS -->
+  <script defer src="/assets/js/common.js"></script>
+
+
+    <!-- Floating TOC: build from d-contents, track scroll, smooth navigate -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var dContents = document.querySelector('d-contents nav');
+      if (!dContents) return;
+
+      // Build floating TOC from existing d-contents
+      var toc = document.createElement('div');
+      toc.className = 'toc-floating';
+      var title = document.createElement('div');
+      title.className = 'toc-title';
+      title.textContent = 'Contents';
+      toc.appendChild(title);
+
+      var items = dContents.querySelectorAll('div, li');
+      var sectionMap = [];
+
+      items.forEach(function(item) {
+        var link = item.querySelector('a[href^="#"]');
+        if (!link) return;
+
+        var isSubitem = item.tagName === 'LI';
+        var tocEntry = document.createElement('div');
+        tocEntry.className = isSubitem ? 'toc-subitem' : 'toc-item';
+
+        var a = document.createElement('a');
+        a.href = link.getAttribute('href');
+        a.textContent = link.textContent;
+        tocEntry.appendChild(a);
+        toc.appendChild(tocEntry);
+
+        sectionMap.push({
+          id: link.getAttribute('href').slice(1),
+          el: tocEntry
+        });
+      });
+
+      document.body.appendChild(toc);
+
+      // Show TOC after byline is scrolled past
+      var byline = document.querySelector('.custom-byline');
+      function updateVisibility() {
+        if (!byline) { toc.classList.add('visible'); return; }
+        var bylineBottom = byline.getBoundingClientRect().bottom;
+        if (bylineBottom < 100) {
+          toc.classList.add('visible');
+        } else {
+          toc.classList.remove('visible');
+        }
+      }
+
+      // Active section tracking
+      function clearActive() {
+        sectionMap.forEach(function(s) { s.el.classList.remove('active'); });
+      }
+
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            clearActive();
+            sectionMap.forEach(function(s) {
+              if (s.id === entry.target.id) s.el.classList.add('active');
+            });
+          }
+        });
+      }, {
+        rootMargin: '-80px 0px -65% 0px',
+        threshold: 0
+      });
+
+      sectionMap.forEach(function(s) {
+        var target = document.getElementById(s.id);
+        if (target) observer.observe(target);
+      });
+
+      // Smooth scroll on click
+      toc.addEventListener('click', function(e) {
+        var link = e.target.closest('a[href^="#"]');
+        if (!link) return;
+        e.preventDefault();
+        var target = document.getElementById(link.getAttribute('href').slice(1));
+        if (target) {
+          window.scrollTo({
+            top: target.getBoundingClientRect().top + window.pageYOffset - 80,
+            behavior: 'smooth'
+          });
+        }
+      });
+
+      // Scroll listener for visibility
+      var ticking = false;
+      window.addEventListener('scroll', function() {
+        if (!ticking) {
+          requestAnimationFrame(function() {
+            updateVisibility();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
+      updateVisibility();
+    });
+    </script>
+  </body>
+
+
+</html>
