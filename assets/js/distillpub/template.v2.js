@@ -718,8 +718,12 @@
 
   // Copyright 2018 The Distill Template Authors
 
-  const katexJSURL = 'https://distill.pub/third-party/katex/katex.min.js';
-  const katexCSSTag = '<link rel="stylesheet" href="https://distill.pub/third-party/katex/katex.min.css" crossorigin="anonymous">';
+  const localMathAssetsURL = (function() {
+    const scriptURL = document.currentScript && document.currentScript.src;
+    return scriptURL ? new URL('../../katex/', scriptURL).href : '/assets/katex/';
+  })();
+  const katexJSURL = localMathAssetsURL + 'katex.min.js';
+  const katexCSSTag = '<link rel="stylesheet" href="' + localMathAssetsURL + 'katex.min.css">';
 
   const T = Template('d-math', `
 ${katexCSSTag}
@@ -782,7 +786,6 @@ ${math}
       scriptTag.src = katexJSURL;
       scriptTag.async = true;
       scriptTag.onload = DMath.katexLoadedCallback;
-      scriptTag.crossorigin = 'anonymous';
       document.head.appendChild(scriptTag);
 
       DMath.katexAdded = true;

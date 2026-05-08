@@ -12190,7 +12190,7 @@
     }
 
     if (needsCSS) {
-      const katexCSSTag = '<link rel="stylesheet" href="https://distill.pub/third-party/katex/katex.min.css" crossorigin="anonymous">';
+      const katexCSSTag = '<link rel="stylesheet" href="/assets/katex/katex.min.css">';
       dom.head.insertAdjacentHTML('beforeend', katexCSSTag);
     }
 
